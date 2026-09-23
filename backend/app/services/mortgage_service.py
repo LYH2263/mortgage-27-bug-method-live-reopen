@@ -22,8 +22,8 @@ class MortgageService:
         if not row: return None
         item = self._run_summary(row)
         item["input"] = _loads(row.get("input_json"))
-        from app.services.live_reopen import refresh_run_on_open
-        item["result"] = refresh_run_on_open(self._c, row)
+        # 只读打开：原样返回落库时钉选的方式与结果，不按现行默认方式重算，也不回写数据库。
+        item["result"] = _loads(row.get("result_json"))
         return item
     def schedule(self, principal, annual_rate, months, loan_id, persist, preview_rows=12, method="equal_payment"):
         if method == equal_principal.METHOD:
